@@ -36,11 +36,11 @@ describe('Blog Posts', function() {
 
   it('should add a blog post on POST', function() {
     const newPost = {
-      title: 'thinkful',
-      content: 'Web development course',
-      author: 'Thinkful author'
+      title: 'Lorem ip some',
+      content: 'foo foo foo foo',
+      author: 'Emma Goldman'
     };
-    const expectedKeys = ['id', 'publishDate','title','content','author'];
+    const expectedKeys = ['id', 'publishDate'].concat(Object.keys(newPost));
 
     return chai.request(app)
       .post('/blog-posts')
@@ -56,15 +56,25 @@ describe('Blog Posts', function() {
       });
   });
 
+  it('should error if POST missing expected values', function() {
+    const badRequestData = {};
+    return chai.request(app)
+      .post('/blog-posts')
+      .send(badRequestData)
+      .catch(function(res) {
+        expect(res).to.have.status(400);
+      });
+  });
+
   it('should update blog posts on PUT', function() {
 
     return chai.request(app)
       // first have to get
       .get('/blog-posts')
-      .then(function(res) {
+      .then(function( res) {
         const updatedPost = Object.assign(res.body[0], {
-          title: 'test-title',
-          content: 'test-content'
+          title: 'connect the dots',
+          content: 'la la la la la'
         });
         return chai.request(app)
           .put(`/blog-posts/${res.body[0].id}`)
